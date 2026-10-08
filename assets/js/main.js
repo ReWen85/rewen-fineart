@@ -36,16 +36,61 @@
   if (grid) {
     GALLERY.forEach((item) => {
       const a = document.createElement("a");
-      a.className = "tile reveal" + ((item.w || 2) / (item.h || 3) > 1.6 ? " tile--wide" : "");
+      a.className = "tile reveal";
       a.href = `werk.html?w=${encodeURIComponent(item.file)}`;
       a.dataset.category = item.category;
+      a.dataset.ratio = (item.w || 2) / (item.h || 3);
+      const alt = [item.title, item.place].filter(Boolean).join(" – ");
       a.innerHTML = `
-        <img src="assets/img/${esc(item.file)}-thumb.webp" alt="${esc(item.title)} – ${esc(item.place)}"
+        <img src="assets/img/${esc(item.file)}-thumb.webp" alt="${esc(alt)}"
              loading="lazy" decoding="async" width="${item.w || 800}" height="${item.h || 1200}" draggable="false">
-        <figcaption><strong>${esc(item.title)}</strong><em>${esc(item.place)}</em>
+        <figcaption><strong>${esc(item.title)}</strong>${item.place ? `<em>${esc(item.place)}</em>` : ""}
           <span class="tile__more">${item.story ? "Zur Geschichte" : "Ansehen"} →</span></figcaption>`;
       grid.appendChild(a);
     });
+
+    /* Blocksatz-Layout: Bilder einer Reihe sind gleich hoch und füllen die Breite exakt.
+       Nichts wird beschnitten – die Kacheln haben immer das Seitenverhältnis des Bildes. */
+    const layout = () => {
+      const W = grid.clientWidth;
+      if (!W) return;
+      const gap = parseFloat(getComputedStyle(grid).columnGap) || 0;
+      // Zielhöhe: Desktop ~3 Hochformate pro Reihe, Tablet ~2, Handy 1
+      const target = W >= 900 ? W * 0.45 : W >= 560 ? W * 0.7 : W * 1.6;
+      const tiles = $$(".tile:not(.hidden)", grid);
+      const rows = [];
+      let row = [];
+      let sum = 0;
+      const heightOf = (r, s) => (W - gap * (r.length - 1)) / s;
+      tiles.forEach((t) => {
+        const ratio = +t.dataset.ratio;
+        if (ratio > 2.5) {                       // Panorama: immer eigene Reihe
+          if (row.length) rows.push([row, false]);
+          rows.push([[t], true]);
+          row = []; sum = 0;
+          return;
+        }
+        if (row.length) {
+          const now = Math.abs(heightOf(row, sum) - target);
+          const next = Math.abs(heightOf([...row, t], sum + ratio) - target);
+          if (next > now) { rows.push([row, true]); row = []; sum = 0; }
+        }
+        row.push(t); sum += ratio;
+      });
+      if (row.length) rows.push([row, false]);
+
+      rows.forEach(([r, full]) => {
+        const s = r.reduce((acc, t) => acc + +t.dataset.ratio, 0);
+        let h = heightOf(r, s);
+        if (!full && h > target * 1.15) h = target;   // unvollständige letzte Reihe nicht aufblasen
+        r.forEach((t) => {
+          t.style.width = `${Math.floor(+t.dataset.ratio * h * 100) / 100}px`;
+          t.style.height = `${Math.floor(h * 100) / 100}px`;
+        });
+      });
+    };
+    new ResizeObserver(layout).observe(grid);
+    layout();
 
     // Filter nur zeigen, wenn es mehr als eine Kategorie gibt
     const cats = [...new Set(GALLERY.map((g) => g.category))];
@@ -58,6 +103,7 @@
         b.addEventListener("click", () => {
           $$("button", filters).forEach((x) => x.setAttribute("aria-pressed", x === b));
           $$(".tile", grid).forEach((t) => t.classList.toggle("hidden", c !== "alle" && t.dataset.category !== c));
+          layout();
         });
         filters.appendChild(b);
       });

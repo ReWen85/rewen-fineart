@@ -287,11 +287,10 @@ section { padding: clamp(80px, 12vw, 160px) var(--gutter); }
 .filters button[aria-pressed="true"] { color: var(--white); border-color: var(--white); }
 
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(14px, 2vw, 28px);
-  align-items: start;
-  grid-auto-flow: dense;   /* keine Lücken vor Panoramen */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(10px, 1.6vw, 22px);
   max-width: 1500px;
   margin: 0 auto;
 }
@@ -306,11 +305,9 @@ section { padding: clamp(80px, 12vw, 160px) var(--gutter); }
   color: inherit; font: inherit;
 }
 .tile.hidden { display: none; }
-.tile--wide { grid-column: 1 / -1; }
-@media (max-width: 900px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .gallery { grid-template-columns: 1fr; } }
+.tile { flex: none; }
 .tile img {
-  width: 100%; height: auto;
+  width: 100%; height: 100%;
   transition: transform 1.4s var(--ease);
   -webkit-user-drag: none; user-select: none;
 }

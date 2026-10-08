@@ -17,9 +17,10 @@ window.GALLERY = [
   // file:     Dateiname in assets/img ohne Endung
   // w, h:     Maße des Vorschaubilds (gibt prepare.py aus) – damit nichts springt
   // title:    Werktitel
-  // place:    Ort / Region (darf vage bleiben – Spots müssen nicht verraten werden)
+  // place:    Ort / Region (darf vage bleiben oder leer "" sein – Spots müssen nicht verraten werden)
   // category: "wasserfall", "berge", "seen", ... (ab zwei Kategorien erscheinen Filter)
-  //           Panoramen (breiter als 1,6:1) bekommen automatisch die volle Breite.
+  //           Das Layout rechnet jede Reihe so, dass alle Bilder gleich hoch sind und die
+  //           Reihe exakt füllen – Hoch-, Quer- und Panoramaformate mischen sich automatisch.
   //
   // Optional:
   // year:     z. B. "2026"
@@ -31,12 +32,15 @@ window.GALLERY = [
   //
   //           Zwei Stunden später ...`,
   { file: "kaskade",             w: 800,  h: 1200, title: "Kaskade",              place: "Bayerische Voralpen",  category: "wasserfall" },
-  { file: "moosvorhang",         w: 800,  h: 1200, title: "Moosvorhang",          place: "Frankreich",            category: "wasserfall" },
+  { file: "moosvorhang",         w: 800,  h: 1200, title: "Moosvorhang",          place: "Frankreich",           category: "wasserfall" },
   { file: "fels-und-faden",      w: 800,  h: 1200, title: "Fels und Faden",       place: "Alpenraum",            category: "wasserfall" },
   { file: "walchensee-panorama", w: 2600, h: 473,  title: "Walchensee im Winterlicht", place: "Walchensee, Oberbayern", category: "berge" },
-  { file: "lichtschacht",        w: 800,  h: 1200, title: "Lichtschacht",         place: "Triberger Wasserfälle, Schwarzwald",            category: "wasserfall" },
+  { file: "lichtschacht",        w: 800,  h: 1200, title: "Lichtschacht",         place: "Triberger Wasserfälle, Schwarzwald", category: "wasserfall" },
   { file: "steinstufen",         w: 800,  h: 1200, title: "Steinstufen",          place: "Alpenraum",            category: "wasserfall" },
-  { file: "glut-am-ufer",        w: 800,  h: 1200, title: "Glut am Ufer",         place: "Starnberger See, Oberbayern",           category: "seen" },
+  { file: "winternacht-baum",    w: 1200, h: 800,  title: "Allein unter Sternen", place: "",                     category: "landschaft" },
+  { file: "glut-am-ufer",        w: 800,  h: 1200, title: "Glut am Ufer",         place: "Starnberger See, Oberbayern", category: "seen" },
+  { file: "erstes-licht-ueber-der-werft", w: 800, h: 1200, title: "Erstes Licht über der Werft", place: "Starnberger See, Oberbayern", category: "seen" },
+  { file: "zwillingsmuehlen-greetsiel", w: 1200, h: 800, title: "Zwillingsmühlen von Greetsiel", place: "Greetsiel, Ostfriesland", category: "landschaft" },
   { file: "eibsee-zugspitze",    w: 2600, h: 900,  title: "Eibsee & Zugspitze",   place: "Eibsee, Wetterstein",  category: "berge" },
 ];
 
@@ -44,4 +48,5 @@ window.CATEGORY_LABELS = {
   wasserfall: "Wasserfälle",
   berge: "Berge",
   seen: "Seen",
+  landschaft: "Landschaft",
 };

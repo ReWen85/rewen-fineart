@@ -15,10 +15,10 @@
 
   document.title = `${item.title} – REWEN Fineart`;
   $('meta[name="description"]').content =
-    `${item.title} – ${item.place}. Fine-Art-Fotografie von REWEN.`;
+    `${[item.title, item.place].filter(Boolean).join(" – ")}. Fine-Art-Fotografie von REWEN.`;
 
   const facts = [
-    ["Ort", item.place],
+    item.place && ["Ort", item.place],
     item.year && ["Jahr", item.year],
     item.category && ["Serie", CATEGORY_LABELS[item.category] || item.category],
     ...(item.details || []).map((d, i) => [i ? "" : "Details", d]),
@@ -35,7 +35,7 @@
   $("#werk").innerHTML = `
     <figure class="werk__figure">
       <button class="werk__zoom" aria-label="${esc(item.title)} im Vollbild ansehen">
-        <img src="${full}" alt="${esc(item.title)} – ${esc(item.place)}" width="${item.w || 800}" height="${item.h || 1200}" draggable="false">
+        <img src="${full}" alt="${esc([item.title, item.place].filter(Boolean).join(" – "))}" width="${item.w || 800}" height="${item.h || 1200}" draggable="false">
       </button>
     </figure>
 
