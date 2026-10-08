@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Werk – REWEN Fineart</title>
+  <meta name="description" content="Fine-Art-Fotografie von REWEN.">
+  <meta name="theme-color" content="#060606">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/cinzel.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="nav" data-solid>
+    <a class="nav__brand" href="index.html" aria-label="REWEN Fineart – Startseite">
+      <img src="assets/img/monogram.png" alt="" width="44" height="44">
+      <span>REWEN</span>
+    </a>
+    <button class="nav__toggle" aria-label="Menü" aria-expanded="false"><span></span><span></span></button>
+    <ul class="nav__links">
+      <li><a href="index.html#werke">Werke</a></li>
+      <li><a href="index.html#about">Über mich</a></li>
+      <li data-needs-shop><a href="index.html#shop">Prints</a></li>
+      <li data-needs-instagram><a href="index.html#kontakt">Kontakt</a></li>
+    </ul>
+  </header>
+
+  <main>
+    <article class="werk" id="werk"></article>
+    <nav class="pager" id="werk-pager" aria-label="Weitere Werke"></nav>
+  </main>
+
+  <footer>
+    <img src="assets/img/monogram.png" alt="" width="64" height="64">
+    <nav aria-label="Rechtliches">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+    </nav>
+    <small>© <span class="year">2026</span> REWEN Fineart · Alle Bilder urheberrechtlich geschützt</small>
+  </footer>
+
+  <div class="lightbox" role="dialog" aria-modal="true" aria-label="Vollbild" aria-hidden="true">
+    <div class="lightbox__stage"><img alt=""></div>
+    <button class="lb-btn lb-close" aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+  </div>
+
+  <script src="assets/js/gallery.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/werk.js"></script>
+</body>
+</html>
