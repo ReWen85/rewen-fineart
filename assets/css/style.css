@@ -386,7 +386,7 @@ section { padding: clamp(80px, 12vw, 160px) var(--gutter); }
   position: absolute;
   width: 42%;
   left: -12%;
-  bottom: -10%;
+  top: -8%;
   border: 6px solid var(--black);
   box-shadow: 0 24px 60px rgba(0,0,0,.6);
 }
@@ -410,7 +410,7 @@ section { padding: clamp(80px, 12vw, 160px) var(--gutter); }
 
 @media (max-width: 860px) {
   .about { grid-template-columns: 1fr; }
-  .about__img { max-width: 440px; margin: 0 auto 3.5rem; width: calc(100% - 18px); }
+  .about__img { max-width: 440px; margin: 2.5rem auto 2rem; width: calc(100% - 18px); }
   .about__img .about__inset { left: -4%; width: 38%; }
 }
 @media (max-width: 420px) { .facts { grid-template-columns: 1fr; } }
