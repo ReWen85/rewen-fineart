@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fotowetter</title>
+<meta name="description" content="Himmelsprognose für Fotografen: Abendrot, Morgenrot, Nebel, Fernsicht und die besten Spots in der Umgebung.">
+<meta name="theme-color" content="#15171d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fotowetter">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="vendor/leaflet.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<header class="topbar">
+  <form id="searchForm" class="search" role="search">
+    <input id="q" type="search" placeholder="Ort suchen, z. B. Eibsee" autocomplete="off" enterkeyhint="search" aria-label="Ort suchen">
+    <button type="submit" class="btn">Suchen</button>
+  </form>
+  <button id="gps" class="btn btn-accent" type="button" title="Aktuelle Position verwenden">📍<span class="hide-s"> Standort</span></button>
+  <select id="radius" aria-label="Umkreis">
+    <option value="10">10 km</option>
+    <option value="25">25 km</option>
+    <option value="40">40 km</option>
+  </select>
+  <ul id="results" class="results" hidden></ul>
+  <div id="busy" class="busy" aria-live="polite"></div>
+</header>
+
+<main class="layout">
+  <section class="mapwrap">
+    <div id="map" aria-label="Karte"></div>
+    <div class="mapctl">
+      <div class="row">
+        <select id="layer" aria-label="Kartenebene"></select>
+        <div id="legend" class="legend"></div>
+      </div>
+      <div class="row timebar">
+        <button id="jumpRise" class="btn icon" type="button" title="Zum Sonnenaufgang">🌅</button>
+        <input id="time" type="range" aria-label="Zeitpunkt">
+        <button id="jumpSet" class="btn icon" type="button" title="Zum Sonnenuntergang">🌇</button>
+      </div>
+      <div id="timeLabel" class="timelabel"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div id="locHead" class="lochead"></div>
+    <nav class="tabs" role="tablist">
+      <button data-tab="sky" role="tab" aria-selected="true">Himmel</button>
+      <button data-tab="hours" role="tab" aria-selected="false">Verlauf</button>
+      <button data-tab="spots" role="tab" aria-selected="false">Spots</button>
+      <button data-tab="info" role="tab" aria-selected="false">Info</button>
+    </nav>
+    <div id="tab-sky" class="tabpane"></div>
+    <div id="tab-hours" class="tabpane" hidden></div>
+    <div id="tab-spots" class="tabpane" hidden><p class="muted">Spots werden gesucht …</p></div>
+    <div id="tab-info" class="tabpane" hidden>
+      <h2>So funktioniert's</h2>
+      <p>Fotowetter lädt für ein Gitter von 7×7 Punkten um deinen Ort die stündliche Vorhersage: Wolken in drei Höhen, Sichtweite, Wind, Feuchte, Niederschlag und Gewitterneigung. Dazu kommen Aerosole und Saharastaub.</p>
+      <h3>Abend- und Morgenrot</h3>
+      <p>Spektakuläre Farben entstehen, wenn <b>hohe oder mittlere Wolken</b> als „Leinwand“ über dir stehen (ideal 25–70 %), es <b>vor Ort wenig tiefe Wolken</b> gibt und der <b>Horizont Richtung Sonne frei</b> ist. Dann kann das Sonnenlicht die Wolken von unten anstrahlen. Deshalb prüft die App die Bewölkung 40–200 km in Richtung Sonnenauf- bzw. -untergang. Leichter Dunst verstärkt Rottöne, starker Dunst dämpft sie. Abziehender Regen sorgt oft für besonders klare, dramatische Luft.</p>
+      <h3>Gelber Himmel</h3>
+      <p>Entsteht vor allem durch Saharastaub (CAMS-Modell) oder durch tiefes Sonnenlicht unter einer Gewitter- oder Wolkendecke.</p>
+      <h3>Karte</h3>
+      <p>Die farbige Ebene zeigt das gewählte Merkmal für den Zeitpunkt des Schiebereglers. Die Linien zeigen die Richtung von Sonnenaufgang (gelb) und Sonnenuntergang (rot). Gestrichelt ist die Sonnenrichtung zum gewählten Zeitpunkt. Tippe irgendwo auf die Karte, um diesen Punkt zu analysieren.</p>
+      <h3>Spots</h3>
+      <p>Aussichtspunkte, Gipfel, Seen, Wasserfälle, Klammen, Burgen u. a. aus OpenStreetMap. Bewertet nach Bekanntheit (Wikipedia-Eintrag, Name, Höhe) und danach, wie gut sie zur heutigen Wetterlage passen. Beispiele: Seen bei Windstille, Gipfel bei Nebel, Wasserfälle bei bedecktem Himmel.</p>
+      <h3>Datenquellen</h3>
+      <ul class="src">
+        <li>Wetter &amp; Luftqualität: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0), CAMS/Copernicus</li>
+        <li>Karten &amp; Spots: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap-Mitwirkende</a> (ODbL), OpenTopoMap</li>
+        <li>Beschreibungen: Wikipedia (CC BY-SA)</li>
+        <li>Kp-Index: NOAA Space Weather Prediction Center</li>
+        <li>Sonne &amp; Mond: SunCalc</li>
+      </ul>
+      <p class="note">Alle Werte sind Schätzungen eines vereinfachten Modells. Sie ersetzen keinen Blick aus dem Fenster.</p>
+      <p class="legal">Ein Projekt von <a href="../">REWEN Fineart</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html#fotowetter">Datenschutz</a></p>
+    </div>
+  </section>
+</main>
+
+<template id="welcome">
+  <div class="welcome">
+    <h2>Wo willst du fotografieren?</h2>
+    <p>Nutze deinen aktuellen Standort, suche oben einen Ort oder tippe auf die Karte.</p>
+    <button class="btn btn-accent" type="button" data-act="gps">📍 Aktuellen Standort verwenden</button>
+    <p class="legal"><a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html#fotowetter">Datenschutz</a></p>
+  </div>
+</template>
+
+<div id="toast" class="toast" role="status"></div>
+<script src="vendor/leaflet.js"></script>
+<script src="vendor/suncalc.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
